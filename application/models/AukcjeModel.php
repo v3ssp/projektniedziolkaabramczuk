@@ -27,7 +27,14 @@ class AukcjeModel extends CI_Model {
   }
 
   public function kup($id) { //dziala
+    $aukcja=$this->db->get_where('aukcje',array('id'=>$id))->row_array();
+    $powiadomienia=array(
+      'idUzytkownika'=>$aukcja['idUzytkownika'],
+      'idAukcji'=>$id,
+      'tresc'=>'Aukcja zakończona'
+    );
     $this->db->trans_start();
+    $this->db->insert('powiadomienia',$powiadomienia);
     $set=array(
       'idWygrywajacego'=>$this->session->userdata('id'),
       'aktywne'=>false
@@ -47,7 +54,21 @@ class AukcjeModel extends CI_Model {
   }
 
   public function podbij($id) { //dziala
+    $aukcja=$this->db->get_where('aukcje',array('id'=>$id))->row_array();
+    $powiadomienia=array(
+      array(
+        'idUzytkownika'=>$aukcja['idUzytkownika'],
+        'idAukcji'=>$id,
+        'tresc'=>'Zmiana ceny na aukcji'
+      ),
+      array(
+        'idUzytkownika'=>$aukcja['idWygrywajacego'],
+        'idAukcji'=>$id,
+        'tresc'=>'Zostałeś przebity'
+      )
+    );
     $this->db->trans_start();
+    $this->db->insert_batch('powiadomienia',$powiadomienia);
     $set=array(
       'idWygrywajacego'=>$this->session->userdata('id'),
       'cena'=>$this->input->post('cena')

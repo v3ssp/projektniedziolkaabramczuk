@@ -78,4 +78,12 @@ class Profil extends CI_Controller {
     $this->load->view('profil/lista');
     $this->load->view('szablon/koniec');
   }
+
+  public function oznacz($id) {
+    if($id) {
+      $where=array('id'=>$id,'idUzytkownika'=>$this->session->userdata('id'));
+      $this->db->delete('powiadomienia',$where);
+    }
+    redirect($this->session->userdata('aktualnaStrona'));
+  }
 }

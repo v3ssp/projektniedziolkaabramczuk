@@ -1,3 +1,6 @@
+<?php
+$this->session->set_userdata('aktualnaStrona',"http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
+ ?>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -28,8 +31,26 @@
         </li>
         <?php
         if($this->session->userdata('zalogowany')) {
+          $powiadomienia=$this->db->get_where('powiadomienia',array('idUzytkownika'=>$this->session->userdata('id')))->result_array();
           ?>
           <li><?=anchor('profil','<i class="glyphicon glyphicon-user"></i> '.$this->session->userdata('imie'))?></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+              &nbsp;<i class="glyphicon glyphicon-globe"></i>
+              <sup><span class="label label-default"><?=count($powiadomienia)?></span></sup>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <?php foreach($powiadomienia as $a) {
+                ?>
+                <li>
+                  <?=anchor('aukcje/szczegoly/'.$a['idAukcji'],$a['tresc'].' - zobacz aukcję')?>
+                  <?=anchor('profil/oznacz/'.$a['id'],'<i class="glyphicon glyphicon-chevron-up"></i>Oznacz jako przeczytane')?>
+                </li>
+                <?php
+              } ?>
+            </ul>
+          </li>
           <li><?=anchor('wiadomosci','Wiadomości')?></li>
           <?php
         }

@@ -51,10 +51,15 @@ else $zdjecie=base_url('zdjecia/brak.png');
         </div>
         <?php
       }
+      elseif($this->session->userdata('id')!=$wlasciciel['id']) {
+        ?>
+        <p>Cena: <?=number_format($aukcja['cena'],2).' zł'?></p>
+        <p>Działania związane z aukcjami tylko dla zalogowanych użytkowników.</p>
+        <?php
+      }
       else {
         ?>
-        <p><?=number_format($aukcja['cena'],2).' zł'?></p>
-        <p>Działania związane z aukcjami tylko dla zalogowanych użytkowników.</p>
+        <p>Cena: <?=number_format($aukcja['cena'],2).' zł'?></p>
         <?php
       }
     }
